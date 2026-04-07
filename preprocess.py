@@ -9,20 +9,22 @@ print(df_raw.head())
 #---------------loading the data after doing the preprocessing-------------
 def clean_data(df):
    
+   df = df.copy()
+
    #clean column names
    df.columns = df.columns.str.strip()
 
    #replace any infinite values
    df.replace([np.inf, -np.inf], np.nan, inplace=True)
 
-   #remove duplicates
-   df.drop_duplicates(inplace=True)
-
    #Convert the timestamp column string to datetime
-   df["Timestamp"] = pd.to_datetime(df["Timestamp"], errors="coerce", dayfirst=True)
+   df["Timestamp"] = pd.to_datetime(df["Timestamp"], format="%d/%m/%Y %H:%M:%S", errors="coerce")
 
    #handle any missing values
    df.dropna(subset=["Label", "Timestamp"], inplace=True)
+
+    #remove duplicates
+   df.drop_duplicates(inplace=True)
 
    return df
 
